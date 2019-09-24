@@ -1,0 +1,4 @@
+multiply
+
+0 0 0 0
+Skip me, I'm not command

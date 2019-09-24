@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleMatrixProcessing": {
+      "commandName": "Project",
+      "commandLineArgs": "help"
+    }
+  }
+}
