@@ -101,9 +101,9 @@ Core has static class ProcessorCommandFabric to produce different implementation
 Serialize and Deserialize operations implemented in Application layer as extensions methods for data models.
 
 ## Conveyor
-Startup class orginizes and orchestrates DataFlow conveyor, where different data transformations are linked together via data buffers.
+Startup class uses Application/Conveyor class to orginize and orchestrate DataFlow conveyor, where different data transformations are linked together via data buffers.
 
-Data transformers that performs calculations tasks work in parallel.
+Data transformers work in parallel.
 
 Buffers size and parallelism are confugurable.
 
