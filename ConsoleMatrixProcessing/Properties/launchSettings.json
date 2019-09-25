@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleMatrixProcessing": {
       "commandName": "Project",
-      "commandLineArgs": "help"
+      "commandLineArgs": "C:\\Users\\Artem\\Downloads\\test"
     }
   }
 }
