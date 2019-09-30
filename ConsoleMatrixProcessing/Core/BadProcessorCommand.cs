@@ -1,7 +1,5 @@
 ﻿using ConsoleMatrixProcessing.Core.Abstractions;
-using ConsoleMatrixProcessing.Core.Models;
 using System;
-using System.Collections.Generic;
 
 namespace ConsoleMatrixProcessing.Core
 {

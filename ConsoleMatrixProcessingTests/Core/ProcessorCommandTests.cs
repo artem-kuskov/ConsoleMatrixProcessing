@@ -1,4 +1,5 @@
 using ConsoleMatrixProcessing.Core;
+using ConsoleMatrixProcessing.Core.Abstractions;
 using ConsoleMatrixProcessing.Core.Models;
 using System.Collections.Generic;
 using Xunit;
@@ -11,26 +12,26 @@ namespace ConsoleMatrixProcessingTests.Core
         public void ProcessorCommand_EqualsForSameCommand()
         {
             //Arrange
-            var addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand.Id = "1";
-            var subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand.Id = "1";
-            var tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand.Id = "1";
-            var multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand.Id = "1";
-            var badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand.Id = "1";
 
-            var addCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand3.Id = "1";
-            var subCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand3.Id = "1";
-            var tranCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand3.Id = "1";
-            var multCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand3.Id = "1";
-            var badCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand3.Id = "1";
 
             //Act
@@ -47,62 +48,62 @@ namespace ConsoleMatrixProcessingTests.Core
         public void ProcessorCommand_NotEqualsForDifferentCommand()
         {
             //Arrange
-            var addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand.Id = "1";
-            var subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand.Id = "1";
-            var tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand.Id = "1";
-            var multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand.Id = "1";
-            var badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand.Id = "1";
 
-            var addCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand2.Id = "2";
-            var subCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand2.Id = "2";
-            var tranCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand2.Id = "2";
-            var multCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand2.Id = "2";
-            var badCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand2.Id = "2";
 
-            var lstMatrix = new List<Matrix<int>>
+            List<Matrix<int>> lstMatrix = new List<Matrix<int>>
             {
                 new Matrix<int>
                 {
                     Data = new int[,] { {1, 2, 3, 4, 5}, }
                 }
             };
-            var addCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add, lstMatrix);
+            IProcessorCommand addCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add, lstMatrix);
             addCommand4.Id = "1";
-            var subCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract, lstMatrix);
+            IProcessorCommand subCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract, lstMatrix);
             subCommand4.Id = "1";
-            var tranCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose, lstMatrix);
+            IProcessorCommand tranCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose, lstMatrix);
             tranCommand4.Id = "1";
-            var multCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply, lstMatrix);
+            IProcessorCommand multCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply, lstMatrix);
             multCommand4.Id = "1";
-            var badCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad, lstMatrix);
+            IProcessorCommand badCommand4 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad, lstMatrix);
             badCommand4.Id = "1";
 
-            var lstMatrix3 = new List<Matrix<int>>
+            List<Matrix<int>> lstMatrix3 = new List<Matrix<int>>
             {
                 new Matrix<int>
                 {
                     Data = new int[,] { {100, 2, 3, 4, 5}, }
                 }
             };
-            var addCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add, lstMatrix3);
+            IProcessorCommand addCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add, lstMatrix3);
             addCommand3.Id = "1";
-            var subCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract, lstMatrix3);
+            IProcessorCommand subCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract, lstMatrix3);
             subCommand3.Id = "1";
-            var tranCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose, lstMatrix3);
+            IProcessorCommand tranCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose, lstMatrix3);
             tranCommand3.Id = "1";
-            var multCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply, lstMatrix3);
+            IProcessorCommand multCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply, lstMatrix3);
             multCommand3.Id = "1";
-            var badCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad, lstMatrix3);
+            IProcessorCommand badCommand3 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad, lstMatrix3);
             badCommand3.Id = "1";
 
             //Act
@@ -141,15 +142,15 @@ namespace ConsoleMatrixProcessingTests.Core
         public void ProcessorCommand_NotEqualsHashCodesForDifferentCommand()
         {
             //Arrange
-            var addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand.Id = "1";
-            var subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand.Id = "1";
-            var tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand.Id = "1";
-            var multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand.Id = "1";
-            var badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand.Id = "1";
 
             //Act
@@ -165,26 +166,26 @@ namespace ConsoleMatrixProcessingTests.Core
         public void ProcessorCommand_EqualsHashCodesForSameCommand()
         {
             //Arrange
-            var addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand.Id = "1";
-            var subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand.Id = "1";
-            var tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand.Id = "1";
-            var multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand.Id = "1";
-            var badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand.Id = "1";
 
-            var addCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
+            IProcessorCommand addCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Add);
             addCommand2.Id = "1";
-            var subCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
+            IProcessorCommand subCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Subtract);
             subCommand2.Id = "1";
-            var tranCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
+            IProcessorCommand tranCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Transpose);
             tranCommand2.Id = "1";
-            var multCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
+            IProcessorCommand multCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Multiply);
             multCommand2.Id = "1";
-            var badCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
+            IProcessorCommand badCommand2 = ProcessorCommandFabric.GetProcessor(ProcessorCommandFabric.Operator.Bad);
             badCommand2.Id = "1";
             //Act
 
