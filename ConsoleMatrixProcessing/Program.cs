@@ -1,6 +1,9 @@
-﻿using ConsoleMatrixProcessing.Application.Abstractions;
+﻿using ConsoleMatrixProcessing.Abstractions;
+using ConsoleMatrixProcessing.Application;
+using ConsoleMatrixProcessing.Application.Abstractions;
 using ConsoleMatrixProcessing.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 
@@ -15,6 +18,7 @@ namespace ConsoleMatrixProcessing
                 .AddLogging(logBuilder => logBuilder.AddSerilog(dispose: true))
                 .AddCommandLineConfiguration(args)
                 .AddTransient<IDataProvider, FileDataProvider>()
+                .AddTransient<IConveyor, Conveyor>()
                 .BuildServiceProvider();
 
             //Configure services
@@ -24,8 +28,12 @@ namespace ConsoleMatrixProcessing
                 .CreateLogger();
 
             //Run
-            Startup startup = new Startup();
-            startup.Run(serviceProvider).Wait();
+            ILogger<Program> logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+            IDataProvider dataProvider = serviceProvider.GetRequiredService<IDataProvider>();
+            IConfigurationProvider configurationProvider = serviceProvider.GetRequiredService<IConfigurationProvider>();
+            IConveyor conveyor = serviceProvider.GetRequiredService<IConveyor>();
+            Startup startup = new Startup(logger, configurationProvider, conveyor);
+            startup.RunAsync().Wait();
         }
     }
 }

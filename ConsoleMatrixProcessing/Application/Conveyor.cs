@@ -1,19 +1,18 @@
-﻿using ConsoleMatrixProcessing.Application.Abstractions;
+﻿using ConsoleMatrixProcessing.Abstractions;
+using ConsoleMatrixProcessing.Application.Abstractions;
 using ConsoleMatrixProcessing.Application.Models;
 using ConsoleMatrixProcessing.Core;
 using ConsoleMatrixProcessing.Core.Abstractions;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace ConsoleMatrixProcessing.Application
 {
-    public class Conveyor
+    public class Conveyor : IConveyor
     {
         private TransformManyBlock<string, string> dataNamesEnumeratorBlock;
         private TransformBlock<string, DataContentModel> readDataBlock;
@@ -28,25 +27,27 @@ namespace ConsoleMatrixProcessing.Application
         private int filesRead;
         private long elapsedTime;
 
-        private IDataProvider DataProvider { get; set; }
-        private ILogger Logger { get; }
+        public bool IsBuilt { get; private set; } = false;
 
-        public Conveyor(ILogger logger, IDataProvider dataProvider)
+        private IDataProvider DataProvider { get; set; }
+        private ILogger<Conveyor> Logger { get; }
+
+        public Conveyor(ILogger<Conveyor> logger, IDataProvider dataProvider)
         {
             Logger = logger;
             DataProvider = dataProvider;
         }
 
-        public Conveyor Build(string filePath, int parallelism, int queueSize)
+        public void Arrange(string dataSource, int parallelism, int queueSize)
         {
-            this.filePath = filePath;
-            var goodParallelismOption = new ExecutionDataflowBlockOptions
+            filePath = dataSource;
+            ExecutionDataflowBlockOptions goodParallelismOption = new ExecutionDataflowBlockOptions
             {
                 BoundedCapacity = queueSize,
                 MaxDegreeOfParallelism = parallelism
             };
             //Usually file operations have bad parallel performance
-            var badParallelismOption = new ExecutionDataflowBlockOptions
+            ExecutionDataflowBlockOptions badParallelismOption = new ExecutionDataflowBlockOptions
             {
                 BoundedCapacity = queueSize,
                 MaxDegreeOfParallelism = 1
@@ -72,11 +73,16 @@ namespace ConsoleMatrixProcessing.Application
 
             serializeCommandBlock.LinkTo(DataflowBlock.NullTarget<DataContentModel>(), model => model == null);
             serializeCommandBlock.LinkTo(writeFilesBlock, linkOptions);
-            return this;
+            IsBuilt = true;
         }
 
-        public async Task Run()
+        public async Task RunAsync()
         {
+            if (!IsBuilt)
+            {
+                Logger.LogError("Error run not arranged conveyor. Use {arrangeMethod}() before {runMethod}().", nameof(Arrange), nameof(RunAsync));
+                throw new InvalidOperationException($"Error run not arranged conveyor. Use {nameof(Arrange)}() before {nameof(RunAsync)}().");
+            }
             //Run conveyor
             Stopwatch stopWatch = Stopwatch.StartNew();
             try
@@ -96,7 +102,6 @@ namespace ConsoleMatrixProcessing.Application
             }
             stopWatch.Stop();
             elapsedTime = stopWatch.ElapsedMilliseconds;
-            return;
         }
 
         public ConveyorCounters GetCounters()
@@ -113,7 +118,7 @@ namespace ConsoleMatrixProcessing.Application
         }
         private ActionBlock<DataContentModel> GetWriteDataAction(ExecutionDataflowBlockOptions options)
         {
-            ActionBlock<DataContentModel> writeFiles = new ActionBlock<DataContentModel>
+            var writeFiles = new ActionBlock<DataContentModel>
                 (
                     async fileContent =>
                     {
@@ -182,14 +187,14 @@ namespace ConsoleMatrixProcessing.Application
 
         private TransformBlock<string, DataContentModel> GetReadDataProducer(ExecutionDataflowBlockOptions options)
         {
-            TransformBlock<string, DataContentModel> readData = new TransformBlock<string, DataContentModel>
+            var readData = new TransformBlock<string, DataContentModel>
                 (
                     async dataPath =>
                     {
                         Interlocked.Increment(ref filesFound);
                         try
                         {
-                            var result = await DataProvider.ReadDataToModelAsync(dataPath);
+                            DataContentModel result = await DataProvider.ReadDataToModelAsync(dataPath);
                             Interlocked.Increment(ref filesRead);
                             return result;
                         }
@@ -212,15 +217,5 @@ namespace ConsoleMatrixProcessing.Application
                     return DataProvider.GetDataNamesEnumerator(path);
                 });
         }
-    }
-
-    public struct ConveyorCounters
-    {
-        public int filesWrite;
-        public int calculatedCommands;
-        public int parsedCommands;
-        public int filesFound;
-        public int filesRead;
-        public long elapsedTime;
     }
 }

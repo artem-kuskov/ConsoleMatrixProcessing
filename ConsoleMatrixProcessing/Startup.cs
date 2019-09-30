@@ -1,6 +1,5 @@
-﻿using ConsoleMatrixProcessing.Application;
+﻿using ConsoleMatrixProcessing.Abstractions;
 using ConsoleMatrixProcessing.Application.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -16,18 +15,21 @@ namespace ConsoleMatrixProcessing
         private int DefaultBufferSize { get; } = 100;
         private int DefaultParallelism { get; } = 4;
 
-        private ILogger Logger { get; set; }
-        private IConfigurationProvider Config { get; set; }
-        private IDataProvider DataProvider { get; set; }
+        private ILogger Logger { get; }
+        private IConfigurationProvider Config { get; }
+        private IConveyor Conveyor { get; }
 
-        public async Task Run(IServiceProvider serviceProvider)
+        public Startup(ILogger logger, IConfigurationProvider configurationProvider, IConveyor conveyor)
         {
-            Logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
-            DataProvider = serviceProvider.GetRequiredService<IDataProvider>();
-            Config = serviceProvider.GetRequiredService<IConfigurationProvider>();
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Config = configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
+            Conveyor = conveyor ?? throw new ArgumentNullException(nameof(conveyor));
+        }
 
+        public async Task RunAsync()
+        {
             //Get parameters
-            var (filePath, parallelism, queueSize, showHelp) = ProcessCommandLineParameters();
+            (string filePath, int parallelism, int queueSize, bool showHelp) = ProcessCommandLineParameters();
 
             if (showHelp)
             {
@@ -36,17 +38,16 @@ namespace ConsoleMatrixProcessing
             }
             Logger.LogInformation("Start process with parallelism={parall}", parallelism);
 
-            //Build and run conveyor
-            var conveyor = new Conveyor(Logger, DataProvider)
-                .Build(filePath, parallelism, queueSize);
-            await conveyor.Run();
-            var counters = conveyor.GetCounters();
+            //Arrange and run conveyor
+            Conveyor.Arrange(filePath, parallelism, queueSize);
+            await Conveyor.RunAsync();
+            ConveyorCounters counters = Conveyor.GetCounters();
 
             Logger.LogInformation("End of processing");
             Logger.LogInformation("Files found: {counterF}. Files read: {counterR}. " +
                 "Commands found: {counterP}. Commands successfully calculated: {counterC}. " +
                 "Files saved: {counterW}. Time elapsed: {time} milliseconds",
-                counters.filesFound, counters.filesRead, counters.parsedCommands, 
+                counters.filesFound, counters.filesRead, counters.parsedCommands,
                 counters.calculatedCommands, counters.filesWrite, counters.elapsedTime);
         }
 
