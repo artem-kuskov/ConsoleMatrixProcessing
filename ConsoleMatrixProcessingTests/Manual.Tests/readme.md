@@ -1,4 +1,9 @@
 ﻿# Instruction to run manual test
+
+
+> ## ! New  integration test added to Integration.Tests/ProgramTests.cs that run this manual test in automat mode !
+
+
 1. Copy folder "test_data" to temporary folder <temp>.
 2. Build and publish project ConsoleMatrixProcessing as executable file in temporary folder <temp>
 3. Open command line interpreter and run command:
